@@ -40,12 +40,80 @@ class Client {
   Client(std::string input_name) : name(input_name){};
 };
 
+class my_time_t
+{
+private:
+  int hour = 0; //[0-23]
+  int min = 0;  //[0-59]
+
+  void normalize_time() {
+    while(min >= 60){
+      min -= 60;
+      hour++;
+    }
+    while(min < 0){
+      min += 60;
+      hour--;
+    }    
+  };
+public:
+  my_time_t(){};
+  my_time_t(unsigned in_hour, unsigned in_min) : hour(in_hour % 24), min(in_min) {
+    normalize_time();
+  };
+
+  my_time_t(const my_time_t & other): my_time_t(other.hour,other.min){
+  }
+
+  my_time_t(const std::string str){ // [XX:XX]
+
+    sscanf(str.c_str(), "%2u:%2u", &hour,&min);
+    hour %= 24;
+    min %= 60;
+  }
+
+  my_time_t operator=(const my_time_t & other) { 
+    hour = other.hour;
+    min = other.min;
+    return *this;
+  };
+
+  my_time_t operator-(const my_time_t & other) const { 
+    my_time_t result(hour - other.hour, min - other.min);
+    return result;
+  };
+
+    my_time_t operator+ (const my_time_t & other) const { 
+    my_time_t result(hour + other.hour, min + other.min);
+    return result;
+  };
+
+  std::string get_str(){
+    char buff[6];
+    sprintf(buff,"%02u:%02u", hour, min);
+    return std::string(buff);
+  }
+
+  int get_round_up(){
+    if(min > 0) return ++hour; 
+    return hour;
+  };
+
+  void set_time(unsigned a, unsigned b){
+    hour = a % 24;
+    min = b;
+  }
+};
+
+
+
+
 class ComputerClub {
  private:
   std::ifstream fin;
 
-  time_t open_time = time(NULL); //переделать
-  time_t close_time = time(NULL);
+  my_time_t open_time;
+  my_time_t close_time;
 
   size_t number_of_tables;
   size_t price;
@@ -57,7 +125,7 @@ class ComputerClub {
   void parse_initial_values();
 
  public:
-  // can call exit()
+  
   ComputerClub(std::string path);
   ~ComputerClub();
 
