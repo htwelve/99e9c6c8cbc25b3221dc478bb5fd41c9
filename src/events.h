@@ -28,10 +28,10 @@ struct IEvent {
   IEvent(my_time_t input_timestamp, int attr)
       : timestamp(timestamp), attribute_one(attr){};
 
-  virtual std::string get_str() {
-    // std::ostringstream sout;
-    // sout << timestamp.get_str() << " " << attribute_one << std::endl;
-    // return sout.str();
+  virtual std::string get_str(){
+      // std::ostringstream sout;
+      // sout << timestamp.get_str() << " " << attribute_one << std::endl;
+      // return sout.str();
   };
 };
 

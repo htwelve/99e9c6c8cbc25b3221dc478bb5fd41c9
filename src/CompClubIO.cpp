@@ -7,7 +7,7 @@ void ComputerClubIO::input_processor() {
     std::cout << output_processor(event);
   }
 }
-//ВРЕМЕННО
+
 std::string ComputerClubIO::output_processor(IEvent& event) {
   return event.get_str();
 }

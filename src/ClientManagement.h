@@ -1,9 +1,9 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <iostream>
 #include <vector>
-#include <functional>
 
 #include "Table.h"
 #include "events.h"
@@ -16,10 +16,22 @@
 
 class ClientManagement {
  private:
-  Event & move_to_table_if_empty(my_time_t timestamp);
+  Event& move_to_table_if_empty(my_time_t timestamp);
 
   bool check_open_hours(my_time_t timestamp);
- 
+
+  std::vector<Table>::iterator find_in_tables(std::string client_name);
+
+  std::vector<Table>::iterator find_empty_table();
+
+  std::vector<Table>::iterator find_non_empty_table();
+
+  std::vector<std::string>::iterator find_in_reception(std::string name);
+
+  bool is_client_inside(std::string name);
+
+  bool is_table_free(size_t table_id);
+
  protected:
   my_time_t open_time;
 
@@ -38,24 +50,17 @@ class ClientManagement {
 
   void createTables();
 
-  std::vector<Table>::iterator find_in_tables(std::string client_name);
+  IEvent& add_client_to_queue(Event event);
 
-  std::vector<Table>::iterator find_empty_table();
+  IEvent& add_client_to_table(Event event);
 
-  std::vector<std::string>::iterator find_in_reception(std::string name);
+  IEvent& client_awaits(Event event);
 
-  bool is_client_inside(std::string name);
+  IEvent& remove_client(Event event);
 
-  bool is_table_free(size_t table_id);
+  //должна вызыватся пока не вернет OK
+  //вызвать all_clients_to_queue(); перед этим
+  IEvent& closing_sequence();
 
-  IEvent & add_client_to_queue(Event event);
-
-  IEvent & add_client_to_table(Event event);
-
-  IEvent & client_awaits(Event event);
-
-  IEvent & remove_client(Event event);
-
-  //сделать приватной
-  
+  void all_clients_to_queue();
 };

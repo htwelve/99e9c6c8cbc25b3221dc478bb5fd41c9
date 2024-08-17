@@ -8,13 +8,13 @@
 #include "events.h"
 #include "my_time_t.h"
 
-class ComputerClub : public ClientManagement, public ComputerClubIO {
+class ComputerClub final : public ClientManagement, public ComputerClubIO {
  private:
   void parse_initial_values() override;
 
   void initialize();
 
-  IEvent& update_state(IEvent event);
+  IEvent& update_state(Event & event);
 
  public:
   //может бросать исключения

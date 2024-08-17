@@ -56,3 +56,35 @@ void ComputerClub::print_info() {
 }
 
 void ComputerClub::initialize() { parse_initial_values(); }
+
+IEvent &ComputerClub::update_state(Event & in_event) {
+  switch (in_event.attribute_one)
+  {
+
+  case CLIENT_ARRIVED_INPUT:
+    
+    return add_client_to_queue(in_event);
+
+  case CLIENT_TOOK_TABLE_INPUT:
+    
+    return add_client_to_table(in_event);
+
+  case CLIENT_AWAITS_INPUT:
+
+    return client_awaits(in_event);
+
+  case CLIENT_LEFT_INPUT:
+
+    return remove_client(in_event);
+
+  case CLOSING_TIME:
+
+    all_clients_to_queue();
+    
+    return closing_sequence();
+
+  default:
+    IEvent tmp(in_event.timestamp, OK);
+    return tmp;
+  }
+}
