@@ -16,12 +16,6 @@ my_time_t::my_time_t(unsigned in_hour, unsigned in_min)
   normalize_time();
 }
 
-// my_time_t::my_time_t(const std::string str) {  // [XX:XX]
-//   sscanf(str.c_str(), "%2u:%2u", &hour, &min);
-//   hour %= 24;
-//   min %= 60;
-// }
-
 my_time_t my_time_t::operator=(const my_time_t& other) {
   hour = other.hour;
   min = other.min;
@@ -52,4 +46,12 @@ int my_time_t::get_round_up() const {
 void my_time_t::set_time(unsigned a, unsigned b) {
   hour = a % 24;
   min = b;
+}
+//ИСКЛЮЧЕНИЕ
+void my_time_t::set_time(const std::string str) {  // [XX:XX]
+
+  if (sscanf(str.c_str(), "%2u:%2u", &hour, &min) != 2)
+    throw CompClubException("set_time(string):format error");
+  hour %= 24;
+  min %= 60;
 }

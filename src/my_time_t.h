@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "CompClubException.h"
+
 class my_time_t {
  private:
   int hour = 0;  //[0-23]
@@ -16,8 +18,6 @@ class my_time_t {
 
   my_time_t(const my_time_t& other) : my_time_t(other.hour, other.min) {}
 
-  my_time_t(const std::string str);
-
   my_time_t operator=(const my_time_t& other);
 
   my_time_t operator-(const my_time_t& other) const;
@@ -29,4 +29,6 @@ class my_time_t {
   int get_round_up() const;
 
   void set_time(unsigned a, unsigned b);
+
+  void set_time(const std::string str);
 };
