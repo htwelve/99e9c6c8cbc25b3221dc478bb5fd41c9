@@ -24,6 +24,10 @@ class my_time_t {
 
   my_time_t operator+(const my_time_t& other) const;
 
+  bool operator>(const my_time_t& other);
+
+  bool operator<(const my_time_t& other);
+
   std::string get_str();
 
   int get_round_up() const;

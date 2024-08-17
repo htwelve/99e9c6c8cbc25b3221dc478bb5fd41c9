@@ -22,6 +22,16 @@ my_time_t my_time_t::operator=(const my_time_t& other) {
   return *this;
 }
 
+bool my_time_t::operator>(const my_time_t& other) {
+  if (hour == other.hour) return min > other.min;
+  return hour > other.hour;
+}
+
+bool my_time_t::operator<(const my_time_t& other) {
+  if (hour == other.hour) return min < other.min;
+  return hour < other.hour;
+}
+
 my_time_t my_time_t::operator-(const my_time_t& other) const {
   my_time_t result(hour - other.hour, min - other.min);
   return result;
