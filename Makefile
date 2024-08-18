@@ -1,14 +1,18 @@
-DATASET = datasets/input4.txt
+DATASET = datasets/input.txt
+OS := $(shell uname)
+CPPFLAGS := -std=c++20 src/*.cpp -o CompClub -Wall -Wextra -Werror
 
 build:
-	g++ -std=c++20 src/*.cpp -o test -g
+	g++ $(CPPFLAGS)
+
 run: build
-	./test $(DATASET)
+	./CompClub $(DATASET)
 clean:
-	rm -rf test
+	rm -rf CompClub CompClub.exe
 
 style:
 	clang-format -i src/*.h src/*.cpp --style=Google
+
 memcheck:
 	valgrind --leak-check=full ./test $(DATASET)
 

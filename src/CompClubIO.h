@@ -15,7 +15,7 @@ class ComputerClubIO {
   virtual void parse_initial_values(){};
 
   virtual Event update_state(Event& event) {
-    return Event("", my_time_t(0, 0), OK);
+    return event;
   };
 
   virtual void print_workday_summary(){};

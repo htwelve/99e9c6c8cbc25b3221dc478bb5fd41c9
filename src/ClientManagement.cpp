@@ -15,7 +15,7 @@ bool ClientManagement::is_client_inside(std::string name) {
 
 bool ClientManagement::is_table_free(size_t table_id) {
   table_id--;
-  if (table_id < 0 || table_id > number_of_tables) return false;
+  if (table_id > number_of_tables) return false;
   return !tables.at(table_id).is_occupied();
 }
 
