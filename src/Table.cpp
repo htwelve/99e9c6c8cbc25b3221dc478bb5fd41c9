@@ -17,7 +17,7 @@ std::string Table::get_client_name() {
 void Table::remove_client(my_time_t timestamp) {
   occupied = false;
 
-  my_time_t paid_time = client_arrival_timestamp - timestamp;
+  my_time_t paid_time = timestamp - client_arrival_timestamp;
 
   total_paid_hours += paid_time.get_round_up();
 

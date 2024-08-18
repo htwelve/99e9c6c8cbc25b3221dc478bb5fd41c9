@@ -9,14 +9,9 @@
 #include "events.h"
 #include "my_time_t.h"
 
-// std::array<std::string, 5> Errors = {"NotOpenYet", "ICanWaitNoLonger",
-//                                      "PlaceIsBusy",
-//                                      "ClientUnknown"
-//                                      "YouShallNotPass"};
-
 class ClientManagement {
  private:
-  Event& move_to_table_if_empty(my_time_t timestamp);
+  Event move_to_table_if_empty(my_time_t timestamp);
 
   bool check_open_hours(my_time_t timestamp);
 
@@ -50,17 +45,15 @@ class ClientManagement {
 
   void createTables();
 
-  IEvent& add_client_to_queue(Event event);
+  Event add_client_to_queue(Event event);
 
-  IEvent& add_client_to_table(Event event);
+  Event add_client_to_table(Event event);
 
-  IEvent& client_awaits(Event event);
+  Event client_awaits(Event event);
 
-  IEvent& remove_client(Event event);
+  Event remove_client(Event event);
 
-  //должна вызыватся пока не вернет OK
-  //вызвать all_clients_to_queue(); перед этим
-  IEvent& closing_sequence();
+  Event closing_sequence();
 
   void all_clients_to_queue();
 };

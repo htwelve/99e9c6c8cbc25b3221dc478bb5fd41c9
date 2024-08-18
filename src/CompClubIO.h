@@ -14,12 +14,18 @@ class ComputerClubIO {
 
   virtual void parse_initial_values(){};
 
+  virtual Event update_state(Event& event) {
+    return Event("", my_time_t(0, 0), OK);
+  };
+
+  virtual void print_workday_summary(){};
+
  protected:
   std::ifstream fin;
 
-  void input_processor();
+  void IO_processor();
 
-  std::string output_processor(IEvent& msg);
+  std::string output_processor(Event msg);
 
   ComputerClubIO(std::string path);
 

@@ -26,12 +26,11 @@ struct IEvent {
   IEvent(){};
 
   IEvent(my_time_t input_timestamp, int attr)
-      : timestamp(timestamp), attribute_one(attr){};
+      : timestamp(input_timestamp), attribute_one(attr){};
 
-  virtual std::string get_str(){
-      // std::ostringstream sout;
-      // sout << timestamp.get_str() << " " << attribute_one << std::endl;
-      // return sout.str();
+  virtual std::string get_str() {
+    std::ostringstream sout;
+    return sout.str();
   };
 };
 
@@ -56,21 +55,6 @@ struct Event : IEvent {
       if (attribute_two != -1) sout << " " << attribute_two;
       sout << std::endl;
     }
-    return sout.str();
-  };
-};
-
-struct ErrorEvent : IEvent {
-  std::string err_msg;
-
-  ErrorEvent(){};
-
-  ErrorEvent(std::string in_err_msg, my_time_t input_timestamp)
-      : IEvent(input_timestamp, 13), err_msg(in_err_msg){};
-
-  std::string get_str() override {
-    std::ostringstream sout;
-    sout << timestamp.get_str() << " 13 " << err_msg << std::endl;
     return sout.str();
   };
 };

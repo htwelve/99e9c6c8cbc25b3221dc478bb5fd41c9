@@ -1,14 +1,22 @@
 #include "CompClubIO.h"
 
-void ComputerClubIO::input_processor() {
+void ComputerClubIO::IO_processor() {
   Event event;
   while (event.attribute_one != CLOSING_TIME) {
     event = read_event();
     std::cout << output_processor(event);
+    std::cout << output_processor(update_state(event));
   }
+  // closing sequence
+  Event closing_event("", event.timestamp, -1);
+  while (event.attribute_one != OK) {
+    event = update_state(closing_event);
+    std::cout << output_processor(event);
+  }
+  print_workday_summary();
 }
 
-std::string ComputerClubIO::output_processor(IEvent& event) {
+std::string ComputerClubIO::output_processor(Event event) {
   return event.get_str();
 }
 

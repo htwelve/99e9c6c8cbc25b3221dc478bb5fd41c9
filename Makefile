@@ -1,12 +1,15 @@
-DATASET = datasets/input.txt
+DATASET = datasets/input4.txt
 
-build: clean
-	g++ -std=c++20 src/*.cpp -o test
-style:
-	clang-format -i src/*.h src/*.cpp --style=Google
+build:
+	g++ -std=c++20 src/*.cpp -o test -g
 run: build
 	./test $(DATASET)
 clean:
 	rm -rf test
 
-.PHONY: build style run clean
+style:
+	clang-format -i src/*.h src/*.cpp --style=Google
+memcheck:
+	valgrind --leak-check=full ./test $(DATASET)
+
+.PHONY: build style run clean memcheck

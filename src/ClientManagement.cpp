@@ -8,19 +8,21 @@ bool ClientManagement::check_open_hours(my_time_t timestamp) {
 bool ClientManagement::is_client_inside(std::string name) {
   if (find_in_reception(name) == reception.end() &&
       find_in_tables(name) == tables.end()) {
-    return true;
+    return false;
   }
-  return false;
+  return true;
 }
 
 bool ClientManagement::is_table_free(size_t table_id) {
-  return tables.at(table_id).is_occupied();
+  table_id--;
+  if (table_id < 0 || table_id > number_of_tables) return false;
+  return !tables.at(table_id).is_occupied();
 }
 
 void ClientManagement::createTables() {
-  tables.reserve(number_of_tables);
+  //  tables.reserve(number_of_tables);
 
-  reception.reserve(number_of_tables);
+  //  reception.reserve(number_of_tables);
 
   for (size_t i = 1; i <= number_of_tables; i++) {
     tables.emplace_back(Table(i));
@@ -36,13 +38,13 @@ std::vector<Table>::iterator ClientManagement::find_in_tables(
 }
 
 std::vector<Table>::iterator ClientManagement::find_empty_table() {
-  auto f = [](Table table) -> bool { return table.is_occupied(); };
+  auto f = [](Table table) -> bool { return !table.is_occupied(); };
 
   return std::find_if(tables.begin(), tables.end(), f);
 }
 
 std::vector<Table>::iterator ClientManagement::find_non_empty_table() {
-  auto f = [](Table table) -> bool { return !table.is_occupied(); };
+  auto f = [](Table table) -> bool { return table.is_occupied(); };
 
   return std::find_if(tables.begin(), tables.end(), f);
 }
@@ -52,53 +54,45 @@ std::vector<std::string>::iterator ClientManagement::find_in_reception(
   return std::find(reception.begin(), reception.end(), name);
 }
 
-IEvent& ClientManagement::add_client_to_queue(Event event) {
+Event ClientManagement::add_client_to_queue(Event event) {
   if (!check_open_hours(event.timestamp)) {
-    ErrorEvent tmp("NotOpenYet", event.timestamp);
-    return tmp;
+    return Event("NotOpenYet", event.timestamp, ERROR_OUTPUT);
 
   } else if (is_client_inside(event.client_name)) {
-    ErrorEvent tmp("YouShallNotPass", event.timestamp);
-    return tmp;
+    return Event("YouShallNotPass", event.timestamp, ERROR_OUTPUT);
 
   } else {
     reception.emplace_back(event.client_name);
   }
-  IEvent tmp(event.timestamp, OK);
+  Event tmp("", event.timestamp, OK);
   return tmp;
 };
 
-IEvent& ClientManagement::add_client_to_table(Event event) {
+Event ClientManagement::add_client_to_table(Event event) {
   if (!is_client_inside(event.client_name)) {
-    ErrorEvent tmp("ClientUnknown", event.timestamp);
-
-    return tmp;
+    return Event("ClientUnknown", event.timestamp, ERROR_OUTPUT);
 
   } else if (!is_table_free(event.attribute_two)) {
-    ErrorEvent tmp("PlaceIsBusy", event.timestamp);
-
-    return tmp;
+    return Event("PlaceIsBusy", event.timestamp, ERROR_OUTPUT);
 
   } else {
-    tables.at(event.attribute_two)
+    tables.at(--event.attribute_two)
         .set_client(event.client_name, event.timestamp);
 
     reception.erase(find_in_reception(event.client_name));
   }
 
-  IEvent tmp(event.timestamp, OK);
+  Event tmp("", event.timestamp, OK);
 
   return tmp;
 }
 
-IEvent& ClientManagement::client_awaits(Event event) {
+Event ClientManagement::client_awaits(Event event) {
   if (!is_client_inside(event.client_name)) {
-    ErrorEvent tmp("ClientUnknown", event.timestamp);
-    return tmp;
+    return Event("ClientUnknown", event.timestamp, ERROR_OUTPUT);
 
   } else if (find_empty_table() != tables.end()) {
-    ErrorEvent tmp("ICanWaitNoLonger", event.timestamp);
-    return tmp;
+    return Event("ICanWaitNoLonger", event.timestamp, ERROR_OUTPUT);
 
   } else if (reception.size() > number_of_tables) {
     remove_client(event);
@@ -108,12 +102,12 @@ IEvent& ClientManagement::client_awaits(Event event) {
     return tmp;
   }
 
-  IEvent tmp(event.timestamp, OK);
+  Event tmp("", event.timestamp, OK);
 
   return tmp;
 }
 
-IEvent& ClientManagement::remove_client(Event event) {
+Event ClientManagement::remove_client(Event event) {
   auto a = find_in_tables(event.client_name);
 
   auto b = find_in_reception(event.client_name);
@@ -129,23 +123,19 @@ IEvent& ClientManagement::remove_client(Event event) {
     b.base()->erase();
 
   } else {
-    ErrorEvent tmp("ClientUnknown", event.timestamp);
-    return tmp;
+    return Event("ClientUnknown", event.timestamp, ERROR_OUTPUT);
   }
-  IEvent tmp(event.timestamp, OK);
+  Event tmp("", event.timestamp, OK);
   return tmp;
 }
 
-Event& ClientManagement::move_to_table_if_empty(my_time_t timestamp) {
+Event ClientManagement::move_to_table_if_empty(my_time_t timestamp) {
   auto a = find_empty_table();
-
   if (!reception.empty() && a != tables.end()) {
-    Event tmp(reception.front(), timestamp, CLIENT_TOOK_TABLE_OUTPUT,
-              a.base()->get_id());
-
-    add_client_to_table(tmp);
-
-    return tmp;
+    Event move_event(reception.front(), timestamp, CLIENT_TOOK_TABLE_OUTPUT,
+                     a.base()->get_id());
+    add_client_to_table(move_event);
+    return move_event;
   }
   Event tmp("", timestamp, OK);
   return tmp;
@@ -161,11 +151,12 @@ void ClientManagement::all_clients_to_queue() {
   std::sort(reception.begin(), reception.end());
 }
 
-IEvent& ClientManagement::closing_sequence() {
+Event ClientManagement::closing_sequence() {
   if (!reception.empty()) {
-    Event tmp(reception.front(),close_time,CLIENT_LEFT_OUTPUT);
+    Event tmp(reception.front(), close_time, CLIENT_LEFT_OUTPUT);
     reception.erase(reception.begin());
+    return tmp;
   }
-  IEvent tmp(close_time, OK);
+  Event tmp("", close_time, OK);
   return tmp;
 }

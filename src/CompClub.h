@@ -14,19 +14,17 @@ class ComputerClub final : public ClientManagement, public ComputerClubIO {
 
   void initialize();
 
-  IEvent& update_state(Event & event);
+  Event update_state(Event& event) override;
+
+  void print_workday_summary() override;
 
  public:
-  //может бросать исключения
   ComputerClub(std::string path);
 
   ~ComputerClub(){};
 
   void start() {
     createTables();
-    input_processor();
+    IO_processor();
   };
-
-  //отладка
-  void print_info();
 };

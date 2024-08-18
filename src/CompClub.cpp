@@ -46,45 +46,42 @@ void ComputerClub::parse_initial_values() {
   }
 }
 
-void ComputerClub::print_info() {
-  std::cout << "Open time: " << open_time.get_str() << std::endl;
-  std::cout << "Price: " << price << std::endl;
-  std::cout << "Tables: " << number_of_tables << std::endl;
-  std::cout << "Close time: " << close_time.get_str() << std::endl;
-  std::cout << "Sum time: " << (close_time = close_time + open_time).get_str()
-            << std::endl;
+void ComputerClub::print_workday_summary() {
+  std::cout << close_time.get_str() << std::endl;
+  for (auto el : tables) {
+    std::cout << el.get_id() << " " << el.get_paid_hours() * price << " "
+              << el.get_total_time().get_str() << std::endl;
+  }
 }
 
 void ComputerClub::initialize() { parse_initial_values(); }
 
-IEvent &ComputerClub::update_state(Event & in_event) {
-  switch (in_event.attribute_one)
-  {
+Event ComputerClub::update_state(Event& in_event) {
+  switch (in_event.attribute_one) {
+    case CLIENT_ARRIVED_INPUT:
 
-  case CLIENT_ARRIVED_INPUT:
-    
-    return add_client_to_queue(in_event);
+      return add_client_to_queue(in_event);
 
-  case CLIENT_TOOK_TABLE_INPUT:
-    
-    return add_client_to_table(in_event);
+    case CLIENT_TOOK_TABLE_INPUT:
 
-  case CLIENT_AWAITS_INPUT:
+      return add_client_to_table(in_event);
 
-    return client_awaits(in_event);
+    case CLIENT_AWAITS_INPUT:
 
-  case CLIENT_LEFT_INPUT:
+      return client_awaits(in_event);
 
-    return remove_client(in_event);
+    case CLIENT_LEFT_INPUT:
 
-  case CLOSING_TIME:
+      return remove_client(in_event);
 
-    all_clients_to_queue();
-    
-    return closing_sequence();
+    case CLOSING_TIME:
 
-  default:
-    IEvent tmp(in_event.timestamp, OK);
-    return tmp;
+      all_clients_to_queue();
+
+      return closing_sequence();
+
+    default:
+      Event tmp("", in_event.timestamp, OK);
+      return tmp;
   }
 }
