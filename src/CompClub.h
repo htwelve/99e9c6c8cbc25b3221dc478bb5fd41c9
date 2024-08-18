@@ -18,6 +18,8 @@ class ComputerClub final : public ClientManagement, public ComputerClubIO {
 
   void print_workday_summary() override;
 
+  void print_open_summary() override;
+
  public:
   ComputerClub(std::string path);
 

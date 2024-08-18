@@ -1,6 +1,7 @@
 #include "CompClubIO.h"
 
 void ComputerClubIO::IO_processor() {
+  print_open_summary();
   Event event;
   while (event.attribute_one != CLOSING_TIME) {
     event = read_event();

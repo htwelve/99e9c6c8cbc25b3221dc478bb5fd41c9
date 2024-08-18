@@ -20,6 +20,8 @@ class ComputerClubIO {
 
   virtual void print_workday_summary(){};
 
+  virtual void print_open_summary(){};
+
  protected:
   std::ifstream fin;
 
