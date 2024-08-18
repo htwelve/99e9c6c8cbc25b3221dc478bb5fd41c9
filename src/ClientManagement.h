@@ -32,9 +32,9 @@ class ClientManagement {
 
   my_time_t close_time;
 
-  size_t price;
+  long unsigned int price;
 
-  size_t number_of_tables;
+  long unsigned int number_of_tables;
 
   // std::vector<std::string>::iterator a
   std::vector<std::string> reception;
