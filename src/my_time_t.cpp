@@ -57,6 +57,7 @@ void my_time_t::set_time(unsigned a, unsigned b) {
   hour = a % 24;
   min = b;
 }
+
 //ИСКЛЮЧЕНИЕ
 void my_time_t::set_time(const std::string str) {  // [XX:XX]
 

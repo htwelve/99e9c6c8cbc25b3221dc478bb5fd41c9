@@ -28,10 +28,6 @@ struct IEvent {
   IEvent(my_time_t input_timestamp, int attr)
       : timestamp(input_timestamp), attribute_one(attr){};
 
-  virtual std::string get_str() {
-    std::ostringstream sout;
-    return sout.str();
-  };
 };
 
 struct Event : IEvent {
@@ -47,7 +43,7 @@ struct Event : IEvent {
         client_name(input_name),
         attribute_two(attr2) {}
 
-  std::string get_str() override {
+  std::string get_str() {
     std::ostringstream sout;
     if (attribute_one != CLOSING_TIME && attribute_one != OK) {
       sout << timestamp.get_str() << " ";
