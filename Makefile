@@ -21,7 +21,6 @@ memcheck: build
 test:
 	g++ -c $(CPPFLAGS) $(SRCFILES) $(CPPTESTFLAGS)
 	ar r libtestbase.a *.o
-	rm -rf *.o
 	g++ $(CPPFLAGS) $(CPPTESTFLAGS) unittest/unittests.cpp -lgtest -L. -ltestbase -o test -g
 	./test
 
