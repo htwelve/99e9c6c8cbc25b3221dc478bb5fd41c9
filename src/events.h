@@ -27,7 +27,6 @@ struct IEvent {
 
   IEvent(my_time_t input_timestamp, int attr)
       : timestamp(input_timestamp), attribute_one(attr){};
-
 };
 
 struct Event : IEvent {

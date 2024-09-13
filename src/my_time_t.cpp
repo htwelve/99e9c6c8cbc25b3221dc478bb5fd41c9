@@ -34,6 +34,7 @@ bool my_time_t::operator<(const my_time_t& other) {
 
 my_time_t my_time_t::operator-(const my_time_t& other) const {
   my_time_t result(hour - other.hour, min - other.min);
+  
   return result;
 }
 

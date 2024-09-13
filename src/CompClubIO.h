@@ -12,17 +12,15 @@ class ComputerClubIO {
 
   Event read_event();
 
+ protected:
   virtual void parse_initial_values(){};
 
-  virtual Event update_state(Event& event) {
-    return event;
-  };
+  virtual Event update_state(Event& event) { return event; };
 
   virtual void print_workday_summary(){};
 
   virtual void print_open_summary(){};
 
- protected:
   std::ifstream fin;
 
   void IO_processor();

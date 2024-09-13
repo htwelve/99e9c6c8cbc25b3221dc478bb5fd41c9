@@ -92,7 +92,7 @@ Event ClientManagement::client_awaits(Event event) {
     return Event("ClientUnknown", event.timestamp, ERROR_OUTPUT);
 
   } else if (find_empty_table() != tables.end()) {
-    return Event("ICanWaitNoLonger", event.timestamp, ERROR_OUTPUT);
+    return Event("ICanWaitNoLonger!", event.timestamp, ERROR_OUTPUT);
 
   } else if (reception.size() > number_of_tables) {
     remove_client(event);

@@ -1,4 +1,4 @@
-DATASET = datasets/input_failed.txt
+DATASET = datasets/input.txt
 OS := $(shell uname)
 CPPFLAGS := -std=c++20 -Wall -Wextra -Werror
 CPPTESTFLAGS := -fprofile-arcs -ftest-coverage -Wall -Wextra -Werror
@@ -13,7 +13,7 @@ clean:
 	rm -rf CompClub CompClub.exe *.o *.gcno *.gcda *.a gcov-report test
 
 style:
-	clang-format -i src/*.h src/*.cpp --style=Google
+	clang-format -i src/*.h src/*.cpp unittest/*.cpp --style=Google
 
 memcheck: build
 	valgrind --leak-check=full ./CompClub $(DATASET)
@@ -28,10 +28,5 @@ test: clean
 gcov_report: test
 	mkdir -p gcov-report
 	gcovr -r . -e tests/ --html --html-details -o gcov-report/index.html
-
-lcov_report:test
-	lcov -t "lcov_report" -o lcov_report.info -c -d . 
-	genhtml -o lcov_report lcov_report.info
-
 
 .PHONY: build style run clean memcheck

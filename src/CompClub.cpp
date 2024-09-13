@@ -54,8 +54,7 @@ void ComputerClub::print_workday_summary() {
   }
 }
 
-void ComputerClub::print_open_summary()
-{
+void ComputerClub::print_open_summary() {
   std::cout << open_time.get_str() << std::endl;
 }
 
@@ -84,9 +83,7 @@ Event ComputerClub::update_state(Event& in_event) {
       all_clients_to_queue();
 
       return closing_sequence();
-
-    default:
-      Event tmp("", in_event.timestamp, OK);
-      return tmp;
   }
+  Event tmp("", in_event.timestamp, OK);
+  return tmp;
 }

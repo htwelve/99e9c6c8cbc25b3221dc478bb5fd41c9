@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-class CompClubException : std::exception {
+class CompClubException : public std::exception {
  private:
   std::string msg;
 
