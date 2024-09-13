@@ -18,7 +18,7 @@ style:
 memcheck: build
 	valgrind --leak-check=full ./CompClub $(DATASET)
 
-test: clean
+test:
 	g++ -c $(CPPFLAGS) $(SRCFILES) $(CPPTESTFLAGS)
 	ar r libtestbase.a *.o
 	rm -rf *.o
